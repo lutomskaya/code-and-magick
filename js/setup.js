@@ -132,9 +132,9 @@ var generateWizards = function () {
 
   for (var i = 0; i < 4; i++) {
     wizards.push({
-      name: NAMES[getArrayRandomValue(NAMES)] + ' ' + SURNAMES[getArrayRandomValue(SURNAMES)],
-      coatColor: COAT_COLORS[getArrayRandomValue(COAT_COLORS)],
-      eyesColor: EYES_COLORS[getArrayRandomValue(EYES_COLORS)]
+      name: getArrayRandomValue(NAMES) + ' ' + getArrayRandomValue(SURNAMES),
+      coatColor: getArrayRandomValue(COAT_COLORS),
+      eyesColor: getArrayRandomValue(EYES_COLORS)
     });
   }
 
