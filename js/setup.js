@@ -44,6 +44,7 @@ var ENTER_KEYCODE = 13;
 var userDialog = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = userDialog.querySelector('.setup-close');
+var setupUserName = userDialog.querySelector('.setup-user-name');
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
@@ -62,7 +63,7 @@ var inputFireballColor = document.querySelector('input[name="fireball-color"]');
 
 // open / close popup
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && evt.target !== setupUserName) {
     closePopup();
   }
 };
