@@ -70,7 +70,6 @@ var onPopupEscPress = function (evt) {
 
 var openPopup = function () {
   userDialog.classList.remove('hidden');
-
   document.addEventListener('keydown', onPopupEscPress);
 };
 
