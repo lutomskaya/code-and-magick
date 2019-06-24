@@ -9,19 +9,15 @@
 
   var bounds = {};
   var isBoundsSet = false;
-  var userDialogWidth = userDialog.offsetWidth;
-  var userDialogHeight = userDialog.offsetHeight;
-  var windowWidth = screen.width;
-  var windowHeight = screen.height;
 
   dialogHandler.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
+
     if (!isBoundsSet) {
       bounds = {
-        minX: 0 + userDialog.scrollLeft,
-        maxX: windowWidth - userDialogWidth + userDialog.scrollLeft,
-        minY: 0 + userDialog.scrollTop,
-        maxY: windowHeight - userDialogHeight + userDialog.scrollTop
+        minX: 0 + userDialog.offsetTop,
+        maxX: screen.width - userDialog.clientWidth,
+        minY: 0 + userDialog.offsetTop
       };
 
       isBoundsSet = true;
@@ -41,6 +37,18 @@
       var coordX = moveEvt.clientX;
       var coordY = moveEvt.clientY;
 
+      if (coordX < bounds.minX) {
+        coordX = bounds.minX;
+      }
+
+      if (coordX > bounds.maxX) {
+        coordX = bounds.maxX;
+      }
+
+      if (coordY < bounds.minY) {
+        coordY = bounds.minY;
+      }
+
       var shift = {
         x: startCoords.x - coordX,
         y: startCoords.y - coordY
@@ -53,23 +61,6 @@
 
       userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
       userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
-
-      if (coordX < bounds.minX) {
-        userDialog.style.left = bounds.minX + 'px';
-      }
-
-      if (coordX > bounds.maxX) {
-        userDialog.style.left = bounds.maxX + 'px';
-      }
-
-      if (coordY < bounds.minY) {
-        userDialog.style.top = bounds.minY + 'px';
-      }
-
-      if (coordY > bounds.maxY) {
-        userDialog.style.top = bounds.maxY + 'px';
-      }
-
     };
 
     var onMouseUp = function (upEvt) {
