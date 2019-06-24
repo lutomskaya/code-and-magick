@@ -45,6 +45,7 @@ var userDialog = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = userDialog.querySelector('.setup-close');
 var setupUserName = userDialog.querySelector('.setup-user-name');
+var setupDefaultCoords = {};
 
 var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
@@ -71,11 +72,17 @@ var onPopupEscPress = function (evt) {
 var openPopup = function () {
   userDialog.classList.remove('hidden');
   document.addEventListener('keydown', onPopupEscPress);
+  setupDefaultCoords = {
+    x: userDialog.offsetLeft,
+    y: userDialog.offsetTop
+  };
 };
 
 var closePopup = function () {
   userDialog.classList.add('hidden');
   document.removeEventListener('keydown', onPopupEscPress);
+  userDialog.style.left = setupDefaultCoords.x + 'px';
+  userDialog.style.top = setupDefaultCoords.y + 'px';
 };
 
 setupOpen.addEventListener('click', function () {

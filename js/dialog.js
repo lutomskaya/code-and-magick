@@ -1,19 +1,36 @@
 'use strict';
 
 (function () {
-
   var userDialog = document.querySelector('.setup');
   var dialogHandler = userDialog.querySelector('.upload');
-  /*
-  var artifactHandler = userDialog.querySelector('.setup-artifacts-cell > img');
-  */
+  var shopElement = document.querySelector('.setup-artifacts-shop');
+  var artifactsElement = document.querySelector('.setup-artifacts');
+  var draggedElement = null;
+
+  var bounds = {};
+  var isBoundsSet = false;
+  var userDialogWidth = userDialog.offsetWidth;
+  var userDialogHeight = userDialog.offsetHeight;
+  var windowWidth = screen.width;
+  var windowHeight = screen.height;
+
   dialogHandler.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
+    if (!isBoundsSet) {
+      bounds = {
+        minX: 0 + userDialog.scrollLeft,
+        maxX: windowWidth - userDialogWidth + userDialog.scrollLeft,
+        minY: 0 + userDialog.scrollTop,
+        maxY: windowHeight - userDialogHeight + userDialog.scrollTop
+      };
 
+      isBoundsSet = true;
+    }
     var startCoords = {
       x: evt.clientX,
       y: evt.clientY
     };
+
 
     var dragged = false;
 
@@ -21,18 +38,37 @@
       moveEvt.preventDefault();
       dragged = true;
 
+      var coordX = moveEvt.clientX;
+      var coordY = moveEvt.clientY;
+
       var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+        x: startCoords.x - coordX,
+        y: startCoords.y - coordY
       };
 
       startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+        x: coordX,
+        y: coordY
       };
 
       userDialog.style.top = (userDialog.offsetTop - shift.y) + 'px';
       userDialog.style.left = (userDialog.offsetLeft - shift.x) + 'px';
+
+      if (coordX < bounds.minX) {
+        userDialog.style.left = bounds.minX + 'px';
+      }
+
+      if (coordX > bounds.maxX) {
+        userDialog.style.left = bounds.maxX + 'px';
+      }
+
+      if (coordY < bounds.minY) {
+        userDialog.style.top = bounds.minY + 'px';
+      }
+
+      if (coordY > bounds.maxY) {
+        userDialog.style.top = bounds.maxY + 'px';
+      }
 
     };
 
@@ -55,46 +91,27 @@
     document.addEventListener('mouseup', onMouseUp);
   });
 
-  /*
-  var onMousedownArtifact = function (evt) {
+  dialogHandler.addEventListener('mousedown', dialogHandler);
+
+  shopElement.addEventListener('dragstart', function (evt) {
+    if (evt.target.tagName === 'IMG') {
+      draggedElement = evt.target;
+    }
+  });
+
+  artifactsElement.addEventListener('dragenter', function (evt) {
     evt.preventDefault();
+  });
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+  artifactsElement.addEventListener('dragover', function (evt) {
+    evt.preventDefault();
+  });
 
-    var onMouseMove = function (moveEvt) {
-      moveEvt.preventDefault();
+  artifactsElement.addEventListener('dragleave', function (evt) {
+    evt.preventDefault();
+  });
 
-      artifactHandler.style.position = 'absolute';
-
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      artifactHandler.style.top = (artifactHandler.offsetTop - shift.y) + 'px';
-      artifactHandler.style.left = (artifactHandler.offsetLeft - shift.x) + 'px';
-
-    };
-
-    var onMouseUp = function (upEvt) {
-      upEvt.preventDefault();
-
-      document.removeEventListener('mousemove', onMouseMove);
-      document.removeEventListener('mouseup', onMouseUp);
-    };
-
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  };
-  artifactHandler.addEventListener('mousedown', onMousedownArtifact);
-*/
-
+  artifactsElement.addEventListener('drop', function (evt) {
+    evt.target.appendChild(draggedElement);
+  });
 })();
