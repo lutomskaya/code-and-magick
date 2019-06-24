@@ -1,23 +1,68 @@
 'use strict';
 
 (function () {
+
   var userDialog = document.querySelector('.setup');
   var dialogHandler = userDialog.querySelector('.upload');
   var shopElement = document.querySelector('.setup-artifacts-shop');
   var artifactsElement = document.querySelector('.setup-artifacts');
+  var setupOpen = document.querySelector('.setup-open');
+  var setupClose = userDialog.querySelector('.setup-close');
+  var setupUserName = userDialog.querySelector('.setup-user-name');
+  var setupDefaultCoords = {};
   var draggedElement = null;
 
   var bounds = {};
   var isBoundsSet = false;
+
+  var onPopupEscPress = function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  };
+
+  var openPopup = function () {
+    userDialog.classList.remove('hidden');
+    document.addEventListener('keydown', onPopupEscPress);
+    setupDefaultCoords = {
+      x: userDialog.offsetLeft,
+      y: userDialog.offsetTop
+    };
+  };
+
+  var closePopup = function () {
+    userDialog.classList.add('hidden');
+    document.removeEventListener('keydown', onPopupEscPress);
+    userDialog.style.left = setupDefaultCoords.x + 'px';
+    userDialog.style.top = setupDefaultCoords.y + 'px';
+  };
+
+  setupOpen.addEventListener('click', function () {
+    openPopup();
+  });
+
+  setupOpen.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, openPopup);
+  });
+
+  setupClose.addEventListener('click', function () {
+    closePopup();
+  });
+
+  setupClose.addEventListener('keydown', function (evt) {
+    window.util.isEscEvent(evt, closePopup);
+  });
+
+  setupUserName.addEventListener('focus', function () {
+    document.removeEventListener('keydown', onPopupEscPress);
+  });
 
   dialogHandler.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
 
     if (!isBoundsSet) {
       bounds = {
-        minX: 0 + userDialog.offsetTop,
-        maxX: screen.width - userDialog.clientWidth,
-        minY: 0 + userDialog.offsetTop
+        minX: dialogHandler.offsetLeft,
+        maxX: screen.width - userDialog.clientWidth + dialogHandler.offsetLeft,
+        minY: dialogHandler.offsetTop
       };
 
       isBoundsSet = true;
