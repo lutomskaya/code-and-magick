@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var MAX_WIZARDS_COUNT = 4;
   var similarWizardTemplate = document.querySelector('#similar-wizard-template')
     .content
     .querySelector('.setup-similar-item');
@@ -16,7 +17,7 @@
   };
 
   var displayWizards = function (data) {
-    var takeNumber = data.length > 4 ? 4 : data.length;
+    var takeNumber = data.length > MAX_WIZARDS_COUNT ? MAX_WIZARDS_COUNT : data.length;
     setupSimilarList.innerHTML = '';
     for (var i = 0; i < takeNumber; i++) {
       setupSimilarList.appendChild(renderWizard(data[i]));
