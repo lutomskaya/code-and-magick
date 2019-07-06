@@ -9,6 +9,7 @@
   var setupOpen = document.querySelector('.setup-open');
   var setupClose = userDialog.querySelector('.setup-close');
   var setupUserName = userDialog.querySelector('.setup-user-name');
+  var setupForm = userDialog.querySelector('.setup-wizard-form');
   var setupDefaultCoords = {};
   var draggedElement = null;
 
@@ -33,7 +34,24 @@
     document.removeEventListener('keydown', onPopupEscPress);
     userDialog.style.left = setupDefaultCoords.x + 'px';
     userDialog.style.top = setupDefaultCoords.y + 'px';
+    setupForm.removeEventListener('submit', onSetupSubmit);
   };
+
+  var setupSubmitClose = function () {
+    closePopup();
+  };
+
+  var onSetupSubmit = function (evt) {
+    evt.preventDefault();
+    window.save(new FormData(setupForm), setupSubmitClose, window.onError);
+  };
+
+  setupForm.addEventListener('submit', function (evt) {
+    window.save(new FormData(setupForm), function () {
+      userDialog.classList.add('hidden');
+    });
+    evt.preventDefault();
+  });
 
   setupOpen.addEventListener('click', function () {
     openPopup();
